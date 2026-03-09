@@ -1,0 +1,6 @@
+PWA icons required:
+  - icon-192.png  (192×192)
+  - icon-512.png  (512×512)
+
+Generate these from icon-192.svg using any image tool, or a service like
+https://realfavicongenerator.net / https://favicon.io

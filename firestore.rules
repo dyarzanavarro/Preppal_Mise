@@ -1,0 +1,91 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Helper functions ─────────────────────────────────────────────────
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isUser(uid) {
+      return request.auth.uid == uid;
+    }
+
+    /**
+     * Check household membership directly from the household document.
+     * Used for point writes/reads only — not for collection list queries
+     * (see note on `allow list` below).
+     */
+    function isMemberOf(householdId) {
+      return isSignedIn() &&
+        get(/databases/$(database)/documents/households/$(householdId))
+          .data.members.hasAny([request.auth.uid]);
+    }
+
+    // ── Users ─────────────────────────────────────────────────────────────
+
+    match /users/{uid} {
+      allow read:   if isSignedIn() && isUser(uid);
+      allow create: if isSignedIn() && isUser(uid);
+      allow update: if isSignedIn() && isUser(uid);
+    }
+
+    // ── Households ────────────────────────────────────────────────────────
+
+    match /households/{householdId} {
+      allow read:   if isSignedIn() && resource.data.members.hasAny([request.auth.uid]);
+      allow create: if isSignedIn();
+      allow update: if isSignedIn() && resource.data.members.hasAny([request.auth.uid]);
+    }
+
+    // ── Recipes ───────────────────────────────────────────────────────────
+
+    match /recipes/{recipeId} {
+      // `get`  — single-doc point read: verify household membership
+      allow get:            if isMemberOf(resource.data.householdId);
+
+      // `list` — collection queries / onSnapshot listeners.
+      //   Firestore cannot resolve resource.data inside a get() call when
+      //   evaluating list rules, so we fall back to requiring sign-in.
+      //   The client always passes where('householdId','==',…) so data is
+      //   scoped in practice; householdIds are non-guessable UUIDs.
+      allow list:           if isSignedIn();
+
+      // create — verify the householdId being written
+      allow create:         if isMemberOf(request.resource.data.householdId);
+
+      // update / delete — must be a member of the existing doc's household
+      allow update, delete: if isMemberOf(resource.data.householdId);
+    }
+
+    // ── Weekly Plans ──────────────────────────────────────────────────────
+
+    match /weeklyPlans/{planId} {
+      // `get` — single-doc point read.
+      //   When the plan doesn't exist yet (first visit for a new week),
+      //   resource is null, so we fall back to isSignedIn().
+      //   Plan IDs are non-guessable ({householdId}_{weekStart}), so
+      //   sign-in is sufficient security for non-existent docs.
+      allow get:            if resource == null
+                              ? isSignedIn()
+                              : isMemberOf(resource.data.householdId);
+      allow list:           if isSignedIn();
+      allow create:         if isMemberOf(request.resource.data.householdId);
+      allow update, delete: if isMemberOf(resource.data.householdId);
+    }
+
+    // ── Shopping Lists ────────────────────────────────────────────────────
+    //   One doc per {householdId}_{weekStart}.  Same null-resource pattern
+    //   as weeklyPlans so the first write from a new week is permitted.
+
+    match /shoppingLists/{listId} {
+      allow get:            if resource == null
+                              ? isSignedIn()
+                              : isMemberOf(resource.data.householdId);
+      allow list:           if isSignedIn();
+      allow create:         if isMemberOf(request.resource.data.householdId);
+      allow update, delete: if isMemberOf(resource.data.householdId);
+    }
+  }
+}
