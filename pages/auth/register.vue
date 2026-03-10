@@ -54,7 +54,7 @@ async function handleGoogle() {
         <h1 class="poster-title">Register</h1>
       </div>
 
-      <p v-if="error" class="border-2 border-ink bg-brand-500 text-white px-3 py-2 text-sm">{{ error }}</p>
+      <p v-if="error" class="border-2 border-ink bg-brand-500 text-ink px-3 py-2 text-sm">{{ error }}</p>
 
       <form class="space-y-4" @submit.prevent="handleRegister">
         <div>
@@ -84,6 +84,10 @@ async function handleGoogle() {
         Already have an account?
         <NuxtLink to="/auth/login" class="underline">Sign in</NuxtLink>
       </p>
+
+      <NuxtLink to="/" class="block text-xs uppercase tracking-[0.08em] text-ink/40 hover:text-ink transition-colors">
+        ← Back to home
+      </NuxtLink>
     </div>
   </div>
 </template>
@@ -91,3 +95,4 @@ async function handleGoogle() {
 <style scoped>
 .label { @apply block text-xs font-display uppercase tracking-[0.08em] mb-1; }
 </style>
+

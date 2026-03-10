@@ -62,7 +62,7 @@ async function handleJoin() {
           <button @click="mode = 'choose'" class="brutalist-btn text-xs px-2 py-1">Back</button>
           <h2 class="font-display text-4xl">Create</h2>
         </div>
-        <p v-if="error" class="border-2 border-ink bg-brand-500 text-white px-3 py-2 text-sm">{{ error }}</p>
+        <p v-if="error" class="border-2 border-ink bg-brand-500 text-ink px-3 py-2 text-sm">{{ error }}</p>
         <form class="space-y-4" @submit.prevent="handleCreate">
           <input v-model="householdName" type="text" required placeholder="Household name" class="brutalist-input" />
           <button type="submit" :disabled="loading" class="w-full brutalist-btn-red disabled:opacity-60">
@@ -77,7 +77,7 @@ async function handleJoin() {
           <h2 class="font-display text-4xl">Join</h2>
         </div>
         <p class="text-sm uppercase tracking-[0.08em]">Enter the 6-character invite code.</p>
-        <p v-if="error" class="border-2 border-ink bg-brand-500 text-white px-3 py-2 text-sm">{{ error }}</p>
+        <p v-if="error" class="border-2 border-ink bg-brand-500 text-ink px-3 py-2 text-sm">{{ error }}</p>
         <form class="space-y-4" @submit.prevent="handleJoin">
           <input
             v-model="inviteCode"
@@ -94,3 +94,4 @@ async function handleJoin() {
     </div>
   </div>
 </template>
+

@@ -11,7 +11,7 @@ export default defineNuxtRouteMiddleware((to) => {
   // Wait until Firebase has resolved auth state before redirecting
   if (!authStore.ready) return
 
-  const publicRoutes = ['/auth/login', '/auth/register']
+  const publicRoutes = ['/', '/auth/login', '/auth/register']
   if (!authStore.isLoggedIn && !publicRoutes.includes(to.path)) {
     return navigateTo('/auth/login')
   }

@@ -127,7 +127,7 @@ async function handleDelete(id: string) {
           v-for="cat in CATEGORIES"
           :key="cat.key"
           class="brutalist-btn text-sm"
-          :class="activeCategory === cat.key ? 'bg-brand-500 text-white' : ''"
+          :class="activeCategory === cat.key ? 'bg-brand-500 text-ink' : ''"
           @click="activeCategory = activeCategory === cat.key ? null : cat.key">
           {{ cat.label }}
         </button>
@@ -137,7 +137,7 @@ async function handleDelete(id: string) {
     <section v-if="recipesStore.allTags.length" class="flex flex-wrap gap-2">
       <button
         class="brutalist-btn text-sm"
-        :class="activeTag === null ? 'bg-brand-500 text-white' : ''"
+        :class="activeTag === null ? 'bg-brand-500 text-ink' : ''"
         @click="activeTag = null">
         All
       </button>
@@ -145,7 +145,7 @@ async function handleDelete(id: string) {
         v-for="tag in recipesStore.allTags"
         :key="tag"
         class="brutalist-btn text-sm"
-        :class="activeTag === tag ? 'bg-brand-500 text-white' : ''"
+        :class="activeTag === tag ? 'bg-brand-500 text-ink' : ''"
         @click="activeTag = activeTag === tag ? null : tag">
         {{ tag }}
       </button>
@@ -203,3 +203,4 @@ async function handleDelete(id: string) {
     </div>
   </Teleport>
 </template>
+

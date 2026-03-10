@@ -22,7 +22,7 @@ const hostname = computed(() => {
     <div v-if="recipe.imageUrl" class="h-44 border-b-2 border-ink bg-black/5 overflow-hidden">
       <img :src="recipe.imageUrl" :alt="recipe.name" class="w-full h-full object-cover" />
     </div>
-    <div v-else class="h-32 border-b-2 border-ink bg-brand-500 text-white grid place-items-center">
+    <div v-else class="h-32 border-b-2 border-ink bg-brand-500 text-ink grid place-items-center">
       <span class="font-display text-5xl">R</span>
     </div>
 
@@ -53,3 +53,4 @@ const hostname = computed(() => {
     </div>
   </article>
 </template>
+

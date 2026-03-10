@@ -41,7 +41,7 @@ async function handleImport() {
         Paste the URL of a recipe page. We'll extract the ingredients and details automatically via JSON-LD schema.
       </p>
 
-      <p v-if="error" class="border-2 border-ink bg-brand-500 text-white px-3 py-2 text-sm">{{ error }}</p>
+      <p v-if="error" class="border-2 border-ink bg-brand-500 text-ink px-3 py-2 text-sm">{{ error }}</p>
 
       <form class="space-y-3" @submit.prevent="handleImport">
         <input v-model="url" type="url" required placeholder="https://www.example.com/recipe/..."
@@ -54,3 +54,4 @@ async function handleImport() {
     </div>
   </div>
 </template>
+

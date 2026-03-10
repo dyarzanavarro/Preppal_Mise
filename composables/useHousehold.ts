@@ -8,6 +8,7 @@ import {
   query,
   where,
   serverTimestamp,
+  arrayUnion,
 } from 'firebase/firestore'
 import type { Household } from '~/types'
 
@@ -71,5 +72,11 @@ export function useHousehold() {
     return { id: snap.id, ...snap.data() } as Household
   }
 
-  return { createHousehold, joinHousehold, getHousehold }
+  async function regenerateInviteCode(householdId: string): Promise<string> {
+    const code = generateInviteCode()
+    await updateDoc(doc(db, 'households', householdId), { inviteCode: code })
+    return code
+  }
+
+  return { createHousehold, joinHousehold, getHousehold, regenerateInviteCode }
 }

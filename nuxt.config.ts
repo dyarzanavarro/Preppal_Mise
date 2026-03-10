@@ -14,8 +14,8 @@ export default defineNuxtConfig({
       name: 'Mise — Meal Planner',
       short_name: 'Mise',
       description: 'Household meal planning made simple',
-      theme_color: '#16a34a',
-      background_color: '#ffffff',
+      theme_color: '#f43f27',
+      background_color: '#fff6e9',
       display: 'standalone',
       orientation: 'portrait',
       icons: [
@@ -80,6 +80,13 @@ export default defineNuxtConfig({
       ],
       link: [
         { rel: 'apple-touch-icon', href: '/icons/icon-192.png' },
+        // Font preconnect + stylesheet — faster than CSS @import
+        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
+        {
+          rel: 'stylesheet',
+          href: 'https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap',
+        },
       ],
     },
   },

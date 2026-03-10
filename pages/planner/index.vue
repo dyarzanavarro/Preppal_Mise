@@ -104,7 +104,7 @@ function getRecipe(day: DayKey, meal: MealType) {
         <article v-for="item in weekDates" :key="item.day" class="brutalist-card p-3 space-y-2">
           <div class="flex items-end justify-between">
             <p class="font-display text-3xl">{{ item.label }} {{ item.date }}</p>
-            <span v-if="item.day === todayKey" class="editorial-kicker bg-brand-500 text-white">Today</span>
+            <span v-if="item.day === todayKey" class="editorial-kicker bg-brand-500 text-ink">Today</span>
           </div>
           <div class="space-y-2">
             <div v-for="meal in MEALS" :key="meal" class="grid grid-cols-[88px_1fr] items-center gap-2">
@@ -122,12 +122,12 @@ function getRecipe(day: DayKey, meal: MealType) {
       <section class="hidden md:block brutalist-card p-4 overflow-x-auto">
         <div class="min-w-[860px] space-y-2">
           <div class="grid grid-cols-8 gap-2">
-            <div class="border-2 border-ink bg-brand-500 text-white px-2 py-2 font-display text-lg">Meal</div>
+            <div class="border-2 border-ink bg-brand-500 text-ink px-2 py-2 font-display text-lg">Meal</div>
             <div
               v-for="item in weekDates"
               :key="item.day"
               class="border-2 border-ink px-2 py-2 text-center"
-              :class="item.day === todayKey ? 'bg-brand-500 text-white' : 'bg-[color:var(--paper)]'">
+              :class="item.day === todayKey ? 'bg-brand-500 text-ink' : 'bg-[color:var(--paper)]'">
               <p class="font-display text-2xl">{{ item.label }}</p>
               <p class="text-xs uppercase tracking-[0.08em]">{{ item.date }} {{ item.month }}</p>
             </div>
@@ -162,3 +162,4 @@ function getRecipe(day: DayKey, meal: MealType) {
     @close="closeSlot"
   />
 </template>
+

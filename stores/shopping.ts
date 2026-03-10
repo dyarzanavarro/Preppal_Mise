@@ -87,6 +87,32 @@ export const useShoppingStore = defineStore('shopping', () => {
     await saveItems(items.value.map((i) => ({ ...i, checked: false })))
   }
 
+  async function addItem(input: {
+    name: string
+    quantity?: string
+    unit?: string
+    category?: IngredientCategory
+  }) {
+    const name = input.name.trim()
+    if (!name) return
+
+    const newItem: ShoppingItem = {
+      id: crypto.randomUUID(),
+      name,
+      quantity: input.quantity?.trim() ?? '',
+      unit: input.unit?.trim() ?? '',
+      category: input.category ?? 'Other',
+      checked: false,
+      recipeNames: ['Manual'],
+    }
+
+    await saveItems([...items.value, newItem])
+  }
+
+  async function deleteItem(id: string) {
+    await saveItems(items.value.filter((i) => i.id !== id))
+  }
+
   function toClipboardText(): string {
     const lines: string[] = ['🛒 Shopping List\n']
     for (const cat of categoriesWithItems.value) {
@@ -102,6 +128,7 @@ export const useShoppingStore = defineStore('shopping', () => {
   return {
     items,
     loading,
+    categoryOrder: CATEGORY_ORDER,
     grouped,
     categoriesWithItems,
     subscribe,
@@ -109,6 +136,8 @@ export const useShoppingStore = defineStore('shopping', () => {
     saveItems,
     toggleItem,
     uncheckAll,
+    addItem,
+    deleteItem,
     toClipboardText,
   }
 })

@@ -55,14 +55,14 @@ const MEAL_LABELS: Record<MealType, string> = {
         <button @click="emit('select', 'eating_out')"
           class="flex-1 brutalist-btn text-sm"
           :class="current === 'eating_out'
-            ? 'bg-brand-500 text-white'
+            ? 'bg-brand-500 text-ink'
             : ''">
           Eating out
         </button>
         <button @click="emit('select', null)"
           class="flex-1 brutalist-btn text-sm"
           :class="current === null
-            ? 'bg-brand-500 text-white'
+            ? 'bg-brand-500 text-ink'
             : ''">
           Clear slot
         </button>
@@ -80,7 +80,7 @@ const MEAL_LABELS: Record<MealType, string> = {
         <button v-for="recipe in filtered" :key="recipe.id"
           class="w-full text-left flex items-center gap-3 px-3 py-3 border-2 border-ink bg-white transition-colors"
           :class="current === recipe.id
-            ? 'bg-brand-500 text-white'
+            ? 'bg-brand-500 text-ink'
             : 'hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[3px_3px_0_#111111]'"
           @click="emit('select', recipe.id)">
           <div class="h-11 w-11 border-2 border-ink overflow-hidden shrink-0 bg-[color:var(--paper)] flex items-center justify-center text-lg">
@@ -105,3 +105,4 @@ const MEAL_LABELS: Record<MealType, string> = {
     </div>
   </div>
 </template>
+

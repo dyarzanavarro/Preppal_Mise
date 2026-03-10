@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { IngredientCategory } from '~/types'
+
 definePageMeta({ middleware: 'auth' })
 
 const authStore = useAuthStore()
@@ -42,6 +44,34 @@ function formatWeekLabel(weekStart: string): string {
 
 const checkedCount = computed(() => shoppingStore.items.filter((i) => i.checked).length)
 const totalCount = computed(() => shoppingStore.items.length)
+
+const draft = reactive<{
+  name: string
+  quantity: string
+  unit: string
+  category: IngredientCategory
+}>({
+  name: '',
+  quantity: '',
+  unit: '',
+  category: 'Other',
+})
+
+const canAddManual = computed(() => draft.name.trim().length > 0)
+
+async function handleAddManual() {
+  if (!canAddManual.value) return
+  await shoppingStore.addItem({
+    name: draft.name,
+    quantity: draft.quantity,
+    unit: draft.unit,
+    category: draft.category,
+  })
+  draft.name = ''
+  draft.quantity = ''
+  draft.unit = ''
+  draft.category = 'Other'
+}
 </script>
 
 <template>
@@ -84,6 +114,19 @@ const totalCount = computed(() => shoppingStore.items.length)
           </div>
         </section>
 
+        <section class="brutalist-card p-4 space-y-3">
+          <h2 class="font-display text-3xl">Add Item</h2>
+          <form class="grid grid-cols-1 md:grid-cols-[1fr_110px_110px_160px_auto] gap-2" @submit.prevent="handleAddManual">
+            <input v-model="draft.name" type="text" placeholder="Item name" class="brutalist-input" />
+            <input v-model="draft.quantity" type="text" placeholder="Qty" class="brutalist-input" />
+            <input v-model="draft.unit" type="text" placeholder="Unit" class="brutalist-input" />
+            <select v-model="draft.category" class="brutalist-input">
+              <option v-for="cat in shoppingStore.categoryOrder" :key="cat" :value="cat">{{ cat }}</option>
+            </select>
+            <button type="submit" :disabled="!canAddManual" class="brutalist-btn-red disabled:opacity-60">Add</button>
+          </form>
+        </section>
+
         <section class="space-y-4">
           <div v-for="cat in shoppingStore.categoriesWithItems" :key="cat" class="brutalist-card p-3">
             <h2 class="font-display text-3xl mb-2">{{ cat }}</h2>
@@ -102,7 +145,15 @@ const totalCount = computed(() => shoppingStore.items.length)
                     {{ item.name }}
                     <span v-if="item.quantity || item.unit" class="text-sm opacity-70">{{ [item.quantity, item.unit].filter(Boolean).join(' ') }}</span>
                   </p>
-                  <p class="text-xs uppercase tracking-[0.08em] opacity-60">{{ item.recipeNames.join(', ') }}</p>
+                  <div class="flex items-center justify-between gap-2">
+                    <p class="text-xs uppercase tracking-[0.08em] opacity-60">{{ item.recipeNames.join(', ') }}</p>
+                    <button
+                      type="button"
+                      class="brutalist-btn text-xs px-2 py-1"
+                      @click.stop="shoppingStore.deleteItem(item.id)">
+                      Delete
+                    </button>
+                  </div>
                 </div>
               </label>
             </div>

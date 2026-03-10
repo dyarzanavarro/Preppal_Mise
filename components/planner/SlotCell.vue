@@ -20,7 +20,7 @@ const emit = defineEmits<{ click: [] }>()
       {
         'hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[3px_3px_0_#111111]': value === null,
         'bg-brand-100':  value === 'eating_out',
-        'bg-brand-500 text-white':  value && value !== 'eating_out',
+        'bg-brand-500 text-ink':  value && value !== 'eating_out',
       },
     ]"
     @click="emit('click')"
@@ -64,3 +64,4 @@ const emit = defineEmits<{ click: [] }>()
     </div>
   </button>
 </template>
+

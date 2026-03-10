@@ -23,9 +23,10 @@ watch(
 )
 
 const NAV_ITEMS = [
-  { to: '/planner',  label: 'Planner' },
-  { to: '/recipes',  label: 'Recipes' },
-  { to: '/shopping', label: 'Shopping' },
+  { to: '/planner',            label: 'Planner' },
+  { to: '/recipes',            label: 'Recipes' },
+  { to: '/shopping',           label: 'Shopping' },
+  { to: '/household/settings', label: 'Household' },
 ]
 
 function isActive(path: string) {
@@ -48,7 +49,9 @@ function isActive(path: string) {
             :key="item.to"
             :to="item.to"
             class="brutalist-btn text-sm"
-            :class="isActive(item.to) ? 'bg-brand-500 text-ink' : 'text-ink'">
+            :class="isActive(item.to)
+              ? '-translate-x-[2px] -translate-y-[2px] shadow-[4px_4px_0_#111111] bg-brand-500 text-ink'
+              : 'text-ink'">
             {{ item.label }}
           </NuxtLink>
         </nav>
@@ -71,7 +74,7 @@ function isActive(path: string) {
         :key="item.to"
         :to="item.to"
         class="flex-1 text-center py-3 font-display uppercase border-r-2 border-ink last:border-r-0 text-ink"
-        :class="isActive(item.to) ? 'bg-brand-500 text-ink' : ''">
+        :class="isActive(item.to) ? 'bg-brand-500 text-ink shadow-[inset_0_-4px_0_#111111]' : ''">
         {{ item.label }}
       </NuxtLink>
     </nav>
