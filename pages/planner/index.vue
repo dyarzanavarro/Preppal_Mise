@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { DayKey, MealType, SlotValue } from '~/types'
+import type { SuggestedSlot } from '~/composables/useMealSuggester'
 import { getMondayOf } from '~/stores/planner'
 
 definePageMeta({ middleware: 'auth' })
@@ -49,6 +50,8 @@ const todayKey = computed<DayKey | null>(() => {
   return MAP[new Date().getDay()]
 })
 
+// ── Slot modal ────────────────────────────────────────────────────────────────
+
 const activeSlot = ref<{ day: DayKey; meal: MealType } | null>(null)
 
 function openSlot(day: DayKey, meal: MealType) {
@@ -74,17 +77,29 @@ function getRecipe(day: DayKey, meal: MealType) {
   if (!val || val === 'eating_out') return undefined
   return recipesStore.getById(val)
 }
+
+// ── Meal suggester ────────────────────────────────────────────────────────────
+
+const showSuggestModal = ref(false)
+
+async function handleApplySuggestions(suggestions: SuggestedSlot[]) {
+  await Promise.all(
+    suggestions.map(s => plannerStore.setSlot(s.day, s.meal, s.recipe!.id)),
+  )
+  showSuggestModal.value = false
+}
 </script>
 
 <template>
   <div class="space-y-6">
+    <!-- Header -->
     <section class="grid-12 gap-y-4">
-      <div class="col-span-12 md:col-span-8">
+      <div class="col-span-12 md:col-span-7">
         <p class="editorial-kicker mb-2">Weekly Composition</p>
         <h1 class="poster-title">Planner</h1>
         <p class="mt-2 font-medium">{{ formatWeekLabel(plannerStore.currentWeekStart) }}</p>
       </div>
-      <div class="col-span-12 md:col-span-4 flex md:justify-end items-end gap-2">
+      <div class="col-span-12 md:col-span-5 flex flex-wrap md:justify-end items-end gap-2">
         <button @click="plannerStore.prevWeek()" class="brutalist-btn">Prev</button>
         <button
           v-if="!isCurrentWeek"
@@ -94,12 +109,18 @@ function getRecipe(day: DayKey, meal: MealType) {
         </button>
         <span v-else class="editorial-kicker">Current</span>
         <button @click="plannerStore.nextWeek()" class="brutalist-btn">Next</button>
+        <button
+          @click="showSuggestModal = true"
+          class="brutalist-btn bg-ink text-black hover:bg-ink/80 transition-colors">
+          ✦ Suggest week
+        </button>
       </div>
     </section>
 
     <div v-if="plannerStore.loading" class="brutalist-card p-8 text-center font-display text-2xl">Loading plan</div>
 
     <template v-else>
+      <!-- Mobile: card per day -->
       <section class="md:hidden space-y-3">
         <article v-for="item in weekDates" :key="item.day" class="brutalist-card p-3 space-y-2">
           <div class="flex items-end justify-between">
@@ -119,6 +140,7 @@ function getRecipe(day: DayKey, meal: MealType) {
         </article>
       </section>
 
+      <!-- Desktop: grid -->
       <section class="hidden md:block brutalist-card p-4 overflow-x-auto">
         <div class="min-w-[860px] space-y-2">
           <div class="grid grid-cols-8 gap-2">
@@ -149,9 +171,15 @@ function getRecipe(day: DayKey, meal: MealType) {
       </section>
     </template>
 
-    <NuxtLink to="/shopping" class="brutalist-btn-red inline-flex items-center justify-center">Generate Shopping List</NuxtLink>
+    <!-- Bottom actions -->
+    <div class="flex flex-wrap gap-2 pt-2 pb-8 sm:pb-0">
+      <NuxtLink to="/shopping" class="brutalist-btn-red inline-flex items-center justify-center">
+        Generate Shopping List
+      </NuxtLink>
+    </div>
   </div>
 
+  <!-- Slot modal -->
   <PlannerSlotModal
     v-if="activeSlot"
     :day="activeSlot.day"
@@ -161,5 +189,14 @@ function getRecipe(day: DayKey, meal: MealType) {
     @select="handleSlotSelect"
     @close="closeSlot"
   />
-</template>
 
+  <!-- Suggest modal -->
+  <PlannerSuggestModal
+    v-if="showSuggestModal && plannerStore.plan"
+    :current-slots="plannerStore.plan.slots"
+    :recipes="recipesStore.recipes"
+    :all-tags="recipesStore.allTags"
+    @apply="handleApplySuggestions"
+    @close="showSuggestModal = false"
+  />
+</template>
