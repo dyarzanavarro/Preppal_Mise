@@ -1,5 +1,8 @@
 import type { Config } from 'tailwindcss'
 
+// Colors come from CSS variables in assets/css/main.css (light + dark), as RGB channels for opacity modifiers.
+const v = (name: string) => `rgb(var(--${name}) / <alpha-value>)`
+
 export default {
   content: [
     './components/**/*.{vue,js,ts}',
@@ -12,25 +15,17 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Neo-brutalist palette
-        brand: {
-          50:  '#fff6e9',
-          100: '#ffe5cc',
-          200: '#ffc799',
-          300: '#ff9a66',
-          400: '#ff6a45',
-          500: '#f43f27',
-          600: '#d82315',
-          700: '#aa170f',
-          800: '#74100f',
-          900: '#3d0908',
-        },
-        cream: '#fff6e9',
-        ink: '#111111',
+        bg:      v('bg'),
+        surface: v('surface'),
+        ink:     { DEFAULT: v('ink'), 2: v('ink-2') },
+        accent:  v('accent'),
+        ok:      v('ok'),
+        warn:    v('warn'),
+        danger:  v('danger'),
+        line:    'var(--line)',
       },
       fontFamily: {
-        sans: ['"IBM Plex Sans"', 'system-ui', 'sans-serif'],
-        display: ['"Barlow Condensed"', 'system-ui', 'sans-serif'],
+        sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Text"', 'Inter', 'system-ui', 'sans-serif'],
       },
     },
   },

@@ -78,111 +78,92 @@ async function handleAddManual() {
 </script>
 
 <template>
-  <div class="space-y-6">
+  <div class="space-y-8">
 
     <!-- Header -->
-    <section class="grid-12 gap-y-4">
-      <div class="col-span-12 lg:col-span-8">
-        <p class="editorial-kicker mb-2">Field Notes</p>
-        <h1 class="poster-title">Shopping</h1>
-        <p class="mt-2 font-medium">{{ formatWeekLabel(plannerStore.currentWeekStart) }}</p>
+    <section class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+      <div>
+        <h1 class="title-page">Shopping</h1>
+        <p class="mt-1 text-ink-2">{{ formatWeekLabel(plannerStore.currentWeekStart) }}</p>
       </div>
-      <div class="col-span-12 lg:col-span-4 flex flex-wrap lg:justify-end items-end gap-2">
-        <NuxtLink to="/planner" class="brutalist-btn">Back to Planner</NuxtLink>
+      <div v-if="totalCount > 0" class="flex flex-wrap items-center gap-2">
+        <button @click="shoppingStore.uncheckAll()" class="btn">Uncheck all</button>
+        <button @click="handleCopy" class="btn">{{ copied ? 'Copied' : 'Copy list' }}</button>
+        <button @click="showCoopModal = true" class="btn-primary">Send to Coop</button>
       </div>
     </section>
 
-    <div v-if="shoppingStore.loading" class="brutalist-card p-8 text-center font-display text-2xl">Loading list</div>
+    <div v-if="shoppingStore.loading" class="card p-10 text-center text-ink-2">Loading list…</div>
 
     <template v-else>
 
       <!-- Empty state: generate -->
-      <section v-if="totalCount === 0" class="brutalist-card p-8 text-center space-y-4">
-        <h2 class="font-display text-5xl">Generate</h2>
-        <p class="uppercase tracking-[0.08em] text-sm">Build the list from this week's planned meals</p>
-        <div>
-          <button @click="handleGenerate" class="brutalist-btn-red">Generate List</button>
-        </div>
+      <section v-if="totalCount === 0" class="card px-6 py-14 text-center space-y-4">
+        <h2 class="title-section">No list yet</h2>
+        <p class="text-ink-2">Build it from this week's planned meals.</p>
+        <button @click="handleGenerate" class="btn-primary">Generate list</button>
       </section>
 
       <template v-else>
 
-        <!-- Progress + actions bar -->
-        <section class="brutalist-card p-4 flex flex-wrap items-center justify-between gap-3">
-          <div class="flex items-center gap-3">
-            <div class="w-40 h-4 border-2 border-ink bg-white">
-              <div
-                class="h-full bg-brand-500 transition-all"
-                :style="{ width: totalCount ? `${(checkedCount / totalCount) * 100}%` : '0%' }" />
-            </div>
-            <span class="font-display text-2xl">{{ checkedCount }}/{{ totalCount }}</span>
+        <!-- Progress -->
+        <section class="flex items-center gap-3">
+          <div class="h-1.5 w-full max-w-xs overflow-hidden rounded-full bg-ink/10">
+            <div
+              class="h-full rounded-full bg-accent transition-all duration-300"
+              :style="{ width: totalCount ? `${(checkedCount / totalCount) * 100}%` : '0%' }" />
           </div>
-          <div class="flex flex-wrap gap-2">
-            <button @click="shoppingStore.uncheckAll()" class="brutalist-btn text-sm">Uncheck All</button>
-            <button @click="handleCopy" class="brutalist-btn text-sm">{{ copied ? 'Copied!' : 'Copy List' }}</button>
-            <button
-              @click="showCoopModal = true"
-              class="brutalist-btn bg-ink text-black hover:opacity-90 transition-opacity text-sm">
-              🛒 Send to Coop
-            </button>
-          </div>
+          <span class="text-sm text-ink-2">{{ checkedCount }} of {{ totalCount }}</span>
         </section>
 
-        <!-- Manual add form -->
-        <section class="brutalist-card p-4 space-y-3">
-          <h2 class="font-display text-3xl">Add Item</h2>
-          <form class="grid grid-cols-1 md:grid-cols-[1fr_110px_110px_160px_auto] gap-2" @submit.prevent="handleAddManual">
-            <input v-model="draft.name"     type="text" placeholder="Item name" class="brutalist-input" />
-            <input v-model="draft.quantity" type="text" placeholder="Qty"       class="brutalist-input" />
-            <input v-model="draft.unit"     type="text" placeholder="Unit"      class="brutalist-input" />
-            <select v-model="draft.category" class="brutalist-input">
-              <option v-for="cat in shoppingStore.categoryOrder" :key="cat" :value="cat">{{ cat }}</option>
-            </select>
-            <button type="submit" :disabled="!canAddManual" class="brutalist-btn-red disabled:opacity-60">Add</button>
-          </form>
-        </section>
+        <!-- Manual add -->
+        <form class="card p-3 grid grid-cols-2 md:grid-cols-[1fr_96px_96px_150px_auto] gap-2" @submit.prevent="handleAddManual">
+          <input v-model="draft.name"     type="text" placeholder="Add an item" class="input col-span-2 md:col-span-1" />
+          <input v-model="draft.quantity" type="text" placeholder="Qty"         class="input" />
+          <input v-model="draft.unit"     type="text" placeholder="Unit"        class="input" />
+          <select v-model="draft.category" class="input col-span-2 md:col-span-1">
+            <option v-for="cat in shoppingStore.categoryOrder" :key="cat" :value="cat">{{ cat }}</option>
+          </select>
+          <button type="submit" :disabled="!canAddManual" class="btn-primary col-span-2 md:col-span-1">Add</button>
+        </form>
 
         <!-- Items by category -->
-        <section class="space-y-4">
-          <div v-for="cat in shoppingStore.categoriesWithItems" :key="cat" class="brutalist-card p-3">
-            <h2 class="font-display text-3xl mb-2">{{ cat }}</h2>
-            <div class="space-y-2">
+        <section class="space-y-6">
+          <div v-for="cat in shoppingStore.categoriesWithItems" :key="cat">
+            <h2 class="mb-2 px-1 text-sm font-semibold text-ink-2">{{ cat }}</h2>
+            <div class="list-group">
               <label
                 v-for="item in shoppingStore.grouped[cat]"
                 :key="item.id"
-                class="grid grid-cols-[24px_1fr] items-start gap-2 border-2 border-ink bg-white px-3 py-2 cursor-pointer">
+                class="group flex cursor-pointer items-center gap-3 px-4 py-3 transition hover:bg-ink/[0.03]">
                 <input
                   type="checkbox"
                   :checked="item.checked"
                   @change="shoppingStore.toggleItem(item.id)"
-                  class="mt-1 h-4 w-4 border-2 border-ink accent-black" />
-                <div>
-                  <p class="font-medium" :class="item.checked ? 'line-through opacity-50' : ''">
+                  class="check shrink-0" />
+                <div class="min-w-0 flex-1">
+                  <p class="truncate" :class="item.checked ? 'text-ink-2 line-through' : ''">
                     {{ item.name }}
-                    <span v-if="item.quantity || item.unit" class="text-sm opacity-70">
+                    <span v-if="item.quantity || item.unit" class="ml-1 text-sm text-ink-2">
                       {{ [item.quantity, item.unit].filter(Boolean).join(' ') }}
                     </span>
                   </p>
-                  <div class="flex items-center justify-between gap-2">
-                    <p class="text-xs uppercase tracking-[0.08em] opacity-60">{{ item.recipeNames.join(', ') }}</p>
-                    <button
-                      type="button"
-                      class="brutalist-btn text-xs px-2 py-1"
-                      @click.stop="shoppingStore.deleteItem(item.id)">
-                      Delete
-                    </button>
-                  </div>
+                  <p v-if="item.recipeNames.length" class="truncate text-xs text-ink-2/80">{{ item.recipeNames.join(', ') }}</p>
                 </div>
+                <button
+                  type="button"
+                  class="btn-icon opacity-100 md:opacity-0 md:group-hover:opacity-100 focus-visible:opacity-100"
+                  :aria-label="`Remove ${item.name}`"
+                  @click.prevent.stop="shoppingStore.deleteItem(item.id)">
+                  <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
               </label>
             </div>
           </div>
         </section>
 
-        <div class="flex gap-2 pb-8 sm:pb-0">
-          <button @click="handleGenerate" class="brutalist-btn">Regenerate</button>
-          <button @click="showCoopModal = true" class="brutalist-btn bg-ink text-black text-sm">
-            🛒 Send to Coop
-          </button>
+        <div class="pb-8 sm:pb-0">
+          <button @click="handleGenerate" class="btn">Regenerate from planner</button>
         </div>
 
       </template>

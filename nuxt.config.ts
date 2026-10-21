@@ -14,8 +14,8 @@ export default defineNuxtConfig({
       name: 'Mise — Meal Planner',
       short_name: 'Mise',
       description: 'Household meal planning made simple',
-      theme_color: '#f43f27',
-      background_color: '#fff6e9',
+      theme_color: '#f5f5f7',
+      background_color: '#f5f5f7',
       display: 'standalone',
       orientation: 'portrait',
       icons: [

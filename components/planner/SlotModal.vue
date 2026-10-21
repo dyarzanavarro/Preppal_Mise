@@ -35,34 +35,33 @@ const MEAL_LABELS: Record<MealType, string> = {
 
 <template>
   <div
-    class="fixed inset-0 bg-black/50 z-50 flex flex-col justify-end sm:flex-row sm:items-center sm:justify-center sm:p-4"
+    class="fixed inset-0 z-50 scrim flex flex-col justify-end sm:flex-row sm:items-center sm:justify-center sm:p-4"
     @click.self="emit('close')"
   >
-    <div class="w-full sm:max-w-2xl flex flex-col brutalist-card bg-[color:var(--paper)]
-                max-h-[85vh] sm:max-h-[80vh]">
+    <div class="sheet w-full sm:max-w-xl flex flex-col max-h-[85vh] sm:max-h-[80vh]">
 
-      <div class="flex items-center justify-between px-5 py-4 border-b-2 border-ink shrink-0">
+      <div class="flex items-center justify-between px-5 py-4 border-b border-line shrink-0">
         <div>
-          <h2 class="font-display text-4xl">
+          <h2 class="title-section">
             {{ DAY_LABELS[day] }} {{ MEAL_LABELS[meal] }}
           </h2>
-          <p class="text-xs uppercase tracking-[0.08em] mt-0.5">Choose a recipe or mark as eating out</p>
+          <p class="mt-0.5 text-sm text-ink-2">Choose a recipe or mark as eating out</p>
         </div>
-        <button @click="emit('close')" class="brutalist-btn text-xs px-2 py-1">Close</button>
+        <button @click="emit('close')" class="btn-icon" aria-label="Close"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg></button>
       </div>
 
       <div class="px-5 pt-4 flex gap-2 shrink-0">
         <button @click="emit('select', 'eating_out')"
-          class="flex-1 brutalist-btn text-sm"
+          class="flex-1 btn"
           :class="current === 'eating_out'
-            ? 'bg-brand-500 text-ink'
+            ? 'bg-accent text-white'
             : ''">
           Eating out
         </button>
         <button @click="emit('select', null)"
-          class="flex-1 brutalist-btn text-sm"
+          class="flex-1 btn"
           :class="current === null
-            ? 'bg-brand-500 text-ink'
+            ? 'bg-accent text-white'
             : ''">
           Clear slot
         </button>
@@ -70,32 +69,27 @@ const MEAL_LABELS: Record<MealType, string> = {
 
       <div class="px-5 pt-3 shrink-0">
         <input v-model="search" type="search" placeholder="Search recipes..."
-          class="brutalist-input" />
+          class="input" />
       </div>
 
       <div class="overflow-y-auto flex-1 px-5 py-3 space-y-1">
-        <div v-if="filtered.length === 0" class="text-sm text-center py-8 uppercase tracking-[0.08em] opacity-60">
+        <div v-if="filtered.length === 0" class="py-8 text-center text-sm text-ink-2">
           No recipes found.
         </div>
         <button v-for="recipe in filtered" :key="recipe.id"
-          class="w-full text-left flex items-center gap-3 px-3 py-3 border-2 border-ink bg-white transition-colors"
-          :class="current === recipe.id
-            ? 'bg-brand-500 text-ink'
-            : 'hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[3px_3px_0_#111111]'"
+          class="w-full text-left flex items-center gap-3 rounded-xl px-3 py-2.5 transition"
+          :class="current === recipe.id ? 'bg-accent/10' : 'hover:bg-ink/[0.05]'"
           @click="emit('select', recipe.id)">
-          <div class="h-11 w-11 border-2 border-ink overflow-hidden shrink-0 bg-[color:var(--paper)] flex items-center justify-center text-lg">
-            <img v-if="recipe.imageUrl" :src="recipe.imageUrl" :alt="recipe.name" class="h-full w-full object-cover" />
-            <span v-else>R</span>
-          </div>
+          <img v-if="recipe.imageUrl" :src="recipe.imageUrl" :alt="recipe.name" class="h-11 w-11 shrink-0 rounded-lg object-cover" />
           <div class="flex-1 min-w-0">
-            <p class="text-sm font-medium truncate">{{ recipe.name }}</p>
+            <p class="truncate text-[15px] font-medium">{{ recipe.name }}</p>
             <div class="flex gap-1.5 flex-wrap mt-0.5">
               <span v-for="tag in recipe.tags.slice(0, 3)" :key="tag"
-                class="text-xs border border-ink px-1.5 py-0.5 bg-white text-ink">{{ tag }}</span>
+                class="chip">{{ tag }}</span>
             </div>
           </div>
           <svg v-if="current === recipe.id"
-            class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            class="h-5 w-5 shrink-0 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
           </svg>
         </button>

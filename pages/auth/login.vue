@@ -49,57 +49,54 @@ function friendlyFirebaseError(code: string): string {
 
 <template>
   <div class="min-h-screen grid place-items-center px-4">
-    <div class="w-full max-w-xl brutalist-card bg-[color:var(--paper)] p-6 md:p-8 space-y-6">
-      <div>
-        <p class="editorial-kicker mb-3">Meal Planning System</p>
-        <h1 class="poster-title">Sign In</h1>
+    <div class="w-full max-w-md card p-6 md:p-8 space-y-6">
+      <div class="text-center">
+        <p class="text-sm font-semibold text-ink-2">Mise</p>
+        <h1 class="title-page mt-1">Sign in</h1>
       </div>
 
-      <p v-if="error" class="border-2 border-ink bg-brand-500 text-ink px-3 py-2 text-sm">{{ error }}</p>
+      <p v-if="error" class="rounded-xl bg-danger/10 text-danger px-3.5 py-2.5 text-sm">{{ error }}</p>
 
       <form class="space-y-4" @submit.prevent="handleEmailLogin">
         <div>
-          <label class="label">Email</label>
+          <label class="field-label">Email</label>
           <input
             v-model="email"
             type="email"
             required
             autocomplete="email"
-            class="brutalist-input"
+            class="input"
           />
         </div>
         <div>
-          <label class="label">Password</label>
+          <label class="field-label">Password</label>
           <input
             v-model="password"
             type="password"
             required
             autocomplete="current-password"
-            class="brutalist-input"
+            class="input"
           />
         </div>
-        <button type="submit" :disabled="loading" class="w-full brutalist-btn-red disabled:opacity-60">
+        <button type="submit" :disabled="loading" class="w-full btn-primary !py-2.5">
           {{ loading ? 'Signing in...' : 'Sign in' }}
         </button>
       </form>
 
-      <button :disabled="loading" class="w-full brutalist-btn" @click="handleGoogleLogin">
+      <button :disabled="loading" class="w-full btn !py-2.5" @click="handleGoogleLogin">
         Continue with Google
       </button>
 
-      <p class="text-sm uppercase tracking-[0.08em]">
+      <p class="text-center text-sm text-ink-2">
         No account?
-        <NuxtLink to="/auth/register" class="underline">Create one</NuxtLink>
+        <NuxtLink to="/auth/register" class="link">Create one</NuxtLink>
       </p>
 
-      <NuxtLink to="/" class="block text-xs uppercase tracking-[0.08em] text-ink/40 hover:text-ink transition-colors">
-        ← Back to home
+      <NuxtLink to="/" class="block text-center text-xs text-ink-2 hover:text-ink transition-colors">
+        Back to home
       </NuxtLink>
     </div>
   </div>
 </template>
 
-<style scoped>
-.label { @apply block text-xs font-display uppercase tracking-[0.08em] mb-1; }
-</style>
 

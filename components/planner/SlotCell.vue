@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { Recipe, SlotValue } from '~/types'
 
-const props = defineProps<{
+defineProps<{
   value:    SlotValue
   recipe:   Recipe | undefined
-  compact?: boolean   // compact mode: smaller cells used in the week-overview rows
-  isToday?: boolean   // highlights the cell with a today ring (desktop column)
+  compact?: boolean   // smaller cells for dense rows
+  isToday?: boolean   // reserved: today's column highlight
 }>()
 
 const emit = defineEmits<{ click: [] }>()
@@ -13,55 +13,34 @@ const emit = defineEmits<{ click: [] }>()
 
 <template>
   <button
-    class="w-full border-2 border-ink text-left transition-all text-xs group bg-[color:var(--paper)]"
+    class="group relative w-full rounded-xl text-left text-xs transition active:scale-[0.98]"
     :class="[
       compact ? 'min-h-[3rem]' : 'min-h-[4.5rem]',
-      isToday && 'shadow-[4px_4px_0_#111111]',
-      {
-        'hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[3px_3px_0_#111111]': value === null,
-        'bg-brand-100':  value === 'eating_out',
-        'bg-brand-500 text-ink':  value && value !== 'eating_out',
-      },
+      value === null && 'border border-dashed border-line text-ink-2/60 hover:border-accent/50 hover:bg-accent/5 hover:text-accent',
+      value === 'eating_out' && 'bg-ink/[0.05] text-ink-2',
+      value && value !== 'eating_out' && 'bg-accent/10 text-ink hover:bg-accent/15',
     ]"
     @click="emit('click')"
   >
     <!-- Empty -->
-    <div v-if="value === null"
-      class="h-full min-h-[inherit] flex items-center justify-center opacity-50 transition-colors">
+    <div v-if="value === null" class="flex h-full min-h-[inherit] items-center justify-center">
       <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
       </svg>
     </div>
 
     <!-- Eating out -->
-    <div v-else-if="value === 'eating_out'"
-      :class="compact
-        ? 'h-full min-h-[inherit] flex items-center justify-center text-base font-display'
-        : 'p-2 flex items-center gap-1.5 font-display text-xl'">
-      <span>EAT OUT</span>
+    <div v-else-if="value === 'eating_out'" class="flex h-full min-h-[inherit] items-center justify-center gap-1.5 p-2 font-medium">
+      Eating out
     </div>
 
     <!-- Recipe -->
-    <div v-else-if="recipe"
-      :class="compact
-        ? 'h-full min-h-[inherit] flex flex-col items-center justify-center gap-0.5 p-1.5'
-        : 'p-2 flex items-center gap-2'">
-      <div
-        :class="compact
-          ? 'h-6 w-6 border border-ink overflow-hidden bg-white text-ink shrink-0 flex items-center justify-center text-sm'
-          : 'h-8 w-8 border border-ink overflow-hidden bg-white text-ink shrink-0 flex items-center justify-center text-base'">
-        <img v-if="recipe.imageUrl" :src="recipe.imageUrl" :alt="recipe.name" class="h-full w-full object-cover" />
-        <span v-else>R</span>
-      </div>
-      <span v-if="!compact" class="font-medium leading-tight line-clamp-2">{{ recipe.name }}</span>
-      <span v-else class="text-[9px] leading-tight text-center line-clamp-2 w-full px-0.5">{{ recipe.name }}</span>
+    <div v-else-if="recipe" class="flex h-full min-h-[inherit] items-center gap-2 p-2.5">
+      <img v-if="recipe.imageUrl" :src="recipe.imageUrl" :alt="recipe.name" class="h-9 w-9 shrink-0 rounded-lg object-cover" />
+      <span class="line-clamp-3 text-[13px] font-medium leading-snug">{{ recipe.name }}</span>
     </div>
 
     <!-- Recipe id set but recipe not loaded yet -->
-    <div v-else
-      :class="compact ? 'h-full min-h-[inherit] flex items-center justify-center opacity-50 text-[10px]' : 'p-2 opacity-60 italic'">
-      {{ compact ? '...' : 'Recipe...' }}
-    </div>
+    <div v-else class="flex h-full min-h-[inherit] items-center p-2.5 text-ink-2/60">…</div>
   </button>
 </template>
-

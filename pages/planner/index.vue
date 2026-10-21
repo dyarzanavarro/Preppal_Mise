@@ -93,43 +93,43 @@ async function handleApplySuggestions(suggestions: SuggestedSlot[]) {
 <template>
   <div class="space-y-6">
     <!-- Header -->
-    <section class="grid-12 gap-y-4">
-      <div class="col-span-12 md:col-span-7">
-        <p class="editorial-kicker mb-2">Weekly Composition</p>
-        <h1 class="poster-title">Planner</h1>
-        <p class="mt-2 font-medium">{{ formatWeekLabel(plannerStore.currentWeekStart) }}</p>
+    <section class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+      <div>
+        <h1 class="title-page">Planner</h1>
+        <p class="mt-1 text-ink-2">{{ formatWeekLabel(plannerStore.currentWeekStart) }}</p>
       </div>
-      <div class="col-span-12 md:col-span-5 flex flex-wrap md:justify-end items-end gap-2">
-        <button @click="plannerStore.prevWeek()" class="brutalist-btn">Prev</button>
-        <button
-          v-if="!isCurrentWeek"
-          @click="plannerStore.goToWeek(getMondayOf(new Date()))"
-          class="brutalist-btn-red">
-          Today
-        </button>
-        <span v-else class="editorial-kicker">Current</span>
-        <button @click="plannerStore.nextWeek()" class="brutalist-btn">Next</button>
-        <button
-          @click="showSuggestModal = true"
-          class="brutalist-btn bg-ink text-black hover:bg-ink/80 transition-colors">
-          ✦ Suggest week
-        </button>
+      <div class="flex items-center gap-2">
+        <div class="flex items-center rounded-full bg-ink/[0.06] p-0.5">
+          <button @click="plannerStore.prevWeek()" class="grid h-8 w-8 place-items-center rounded-full text-ink-2 transition hover:bg-surface hover:text-ink" aria-label="Previous week">
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></svg>
+          </button>
+          <button
+            @click="plannerStore.goToWeek(getMondayOf(new Date()))"
+            :disabled="isCurrentWeek"
+            class="px-3 text-sm font-medium transition disabled:text-ink-2/60">
+            Today
+          </button>
+          <button @click="plannerStore.nextWeek()" class="grid h-8 w-8 place-items-center rounded-full text-ink-2 transition hover:bg-surface hover:text-ink" aria-label="Next week">
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
+          </button>
+        </div>
+        <button @click="showSuggestModal = true" class="btn-primary">✦ Suggest week</button>
       </div>
     </section>
 
-    <div v-if="plannerStore.loading" class="brutalist-card p-8 text-center font-display text-2xl">Loading plan</div>
+    <div v-if="plannerStore.loading" class="card p-10 text-center text-ink-2">Loading plan…</div>
 
     <template v-else>
       <!-- Mobile: card per day -->
       <section class="md:hidden space-y-3">
-        <article v-for="item in weekDates" :key="item.day" class="brutalist-card p-3 space-y-2">
-          <div class="flex items-end justify-between">
-            <p class="font-display text-3xl">{{ item.label }} {{ item.date }}</p>
-            <span v-if="item.day === todayKey" class="editorial-kicker bg-brand-500 text-ink">Today</span>
+        <article v-for="item in weekDates" :key="item.day" class="card p-4 space-y-3">
+          <div class="flex items-baseline justify-between">
+            <p class="text-lg font-semibold tracking-tight">{{ item.label }} <span class="font-normal text-ink-2">{{ item.date }} {{ item.month }}</span></p>
+            <span v-if="item.day === todayKey" class="chip chip-accent">Today</span>
           </div>
           <div class="space-y-2">
-            <div v-for="meal in MEALS" :key="meal" class="grid grid-cols-[88px_1fr] items-center gap-2">
-              <span class="text-xs uppercase tracking-[0.08em]">{{ MEAL_LABEL[meal] }}</span>
+            <div v-for="meal in MEALS" :key="meal" class="grid grid-cols-[72px_1fr] items-center gap-2">
+              <span class="text-xs font-medium text-ink-2">{{ MEAL_LABEL[meal] }}</span>
               <PlannerSlotCell
                 :value="getSlot(item.day, meal)"
                 :recipe="getRecipe(item.day, meal)"
@@ -141,23 +141,16 @@ async function handleApplySuggestions(suggestions: SuggestedSlot[]) {
       </section>
 
       <!-- Desktop: grid -->
-      <section class="hidden md:block brutalist-card p-4 overflow-x-auto">
-        <div class="min-w-[860px] space-y-2">
-          <div class="grid grid-cols-8 gap-2">
-            <div class="border-2 border-ink bg-brand-500 text-ink px-2 py-2 font-display text-lg">Meal</div>
-            <div
-              v-for="item in weekDates"
-              :key="item.day"
-              class="border-2 border-ink px-2 py-2 text-center"
-              :class="item.day === todayKey ? 'bg-brand-500 text-ink' : 'bg-[color:var(--paper)]'">
-              <p class="font-display text-2xl">{{ item.label }}</p>
-              <p class="text-xs uppercase tracking-[0.08em]">{{ item.date }} {{ item.month }}</p>
-            </div>
+      <section class="hidden md:block card p-5 overflow-x-auto">
+        <div class="min-w-[860px] grid grid-cols-[84px_repeat(7,minmax(0,1fr))] gap-2">
+          <div />
+          <div v-for="item in weekDates" :key="item.day" class="pb-1 text-center">
+            <p class="text-xs font-medium" :class="item.day === todayKey ? 'text-accent' : 'text-ink-2'">{{ item.label }}</p>
+            <p class="mx-auto mt-1 grid h-8 w-8 place-items-center rounded-full text-lg font-semibold"
+               :class="item.day === todayKey ? 'bg-accent text-white' : ''">{{ item.date }}</p>
           </div>
-          <div v-for="meal in MEALS" :key="meal" class="grid grid-cols-8 gap-2">
-            <div class="border-2 border-ink px-2 py-2 bg-[color:var(--paper)]">
-              <p class="font-display text-2xl">{{ MEAL_LABEL[meal] }}</p>
-            </div>
+          <template v-for="meal in MEALS" :key="meal">
+            <div class="flex items-center text-xs font-medium text-ink-2">{{ MEAL_LABEL[meal] }}</div>
             <PlannerSlotCell
               v-for="{ day } in weekDates"
               :key="day"
@@ -166,14 +159,14 @@ async function handleApplySuggestions(suggestions: SuggestedSlot[]) {
               :recipe="getRecipe(day, meal)"
               @click="openSlot(day, meal)"
             />
-          </div>
+          </template>
         </div>
       </section>
     </template>
 
     <!-- Bottom actions -->
     <div class="flex flex-wrap gap-2 pt-2 pb-8 sm:pb-0">
-      <NuxtLink to="/shopping" class="brutalist-btn-red inline-flex items-center justify-center">
+      <NuxtLink to="/shopping" class="btn">
         Generate Shopping List
       </NuxtLink>
     </div>

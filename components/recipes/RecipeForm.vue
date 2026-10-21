@@ -104,45 +104,45 @@ function handleSubmit() {
 
     <!-- Name -->
     <div>
-      <label class="label">Recipe name *</label>
+      <label class="field-label">Recipe name *</label>
       <input v-model="name" type="text" required placeholder="e.g. Spaghetti Bolognese"
-        class="brutalist-input" />
+        class="input" />
     </div>
 
     <!-- Two-col meta -->
     <div class="grid grid-cols-2 gap-3">
       <div>
-        <label class="label">Prep time</label>
-        <input v-model="prepTime" type="text" placeholder="e.g. 15 mins" class="brutalist-input" />
+        <label class="field-label">Prep time</label>
+        <input v-model="prepTime" type="text" placeholder="e.g. 15 mins" class="input" />
       </div>
       <div>
-        <label class="label">Cook time</label>
-        <input v-model="cookTime" type="text" placeholder="e.g. 30 mins" class="brutalist-input" />
+        <label class="field-label">Cook time</label>
+        <input v-model="cookTime" type="text" placeholder="e.g. 30 mins" class="input" />
       </div>
       <div>
-        <label class="label">Servings</label>
-        <input v-model.number="servings" type="number" min="1" placeholder="4" class="brutalist-input" />
+        <label class="field-label">Servings</label>
+        <input v-model.number="servings" type="number" min="1" placeholder="4" class="input" />
       </div>
       <div>
-        <label class="label">Source URL</label>
-        <input v-model="sourceUrl" type="url" placeholder="https://..." class="brutalist-input" />
+        <label class="field-label">Source URL</label>
+        <input v-model="sourceUrl" type="url" placeholder="https://..." class="input" />
       </div>
     </div>
 
     <!-- Description -->
     <div>
-      <label class="label">Description</label>
-      <textarea v-model="description" rows="2" placeholder="Optional short description..." class="brutalist-input resize-none" />
+      <label class="field-label">Description</label>
+      <textarea v-model="description" rows="2" placeholder="Optional short description..." class="input resize-none" />
     </div>
 
     <!-- Ingredients -->
     <div>
-      <label class="label">Ingredients</label>
+      <label class="field-label">Ingredients</label>
       <!-- Column headers -->
       <div class="flex gap-1.5 mb-1 px-0.5">
-        <span class="w-12 shrink-0 text-xs text-gray-400">Qty</span>
-        <span class="w-[4.5rem] shrink-0 text-xs text-gray-400">Unit</span>
-        <span class="flex-1 text-xs text-gray-400">Name</span>
+        <span class="w-12 shrink-0 text-xs text-ink-2">Qty</span>
+        <span class="w-[4.5rem] shrink-0 text-xs text-ink-2">Unit</span>
+        <span class="flex-1 text-xs text-ink-2">Name</span>
       </div>
       <div class="space-y-1">
         <div v-for="(ing, i) in ingredients" :key="i" class="flex gap-1.5 items-center">
@@ -152,50 +152,50 @@ function handleSubmit() {
             class="ing-input w-[4.5rem] shrink-0" />
           <input v-model="ing.name" type="text" placeholder="Ingredient name"
             class="ing-input flex-1" />
-          <button type="button" @click="removeIngredient(i)" class="brutalist-btn-red text-xs px-2 py-1 shrink-0">X</button>
+          <button type="button" @click="removeIngredient(i)" class="btn-icon shrink-0" aria-label="Remove ingredient"><svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg></button>
         </div>
       </div>
       <button type="button" @click="addIngredient"
-        class="mt-1.5 brutalist-btn text-xs px-2 py-1">
+        class="mt-2 btn btn-sm">
         Add ingredient
       </button>
     </div>
 
     <!-- Tags -->
     <div>
-      <label class="label">Tags</label>
+      <label class="field-label">Tags</label>
       <div class="flex flex-wrap gap-1.5 mb-2">
         <span v-for="tag in tags" :key="tag"
-          class="inline-flex items-center gap-1 border border-ink bg-white text-xs font-medium px-2 py-1">
+          class="chip chip-accent">
           {{ tag }}
-          <button type="button" @click="removeTag(tag)" class="font-display">X</button>
+          <button type="button" @click="removeTag(tag)" class="-mr-0.5 opacity-70 hover:opacity-100" aria-label="Remove tag"><svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg></button>
         </span>
       </div>
       <input v-model="tagInput" type="text" placeholder="Add tag and press Enter..."
         @keydown="handleTagKeydown" @blur="addTag"
-        class="brutalist-input" />
+        class="input" />
     </div>
 
     <!-- Notes -->
     <div>
-      <label class="label">Notes</label>
-      <textarea v-model="notes" rows="3" placeholder="Optional notes or instructions..." class="brutalist-input resize-none" />
+      <label class="field-label">Notes</label>
+      <textarea v-model="notes" rows="3" placeholder="Optional notes or instructions..." class="input resize-none" />
     </div>
 
     <!-- Image URL -->
     <div>
-      <label class="label">Image URL</label>
-      <input v-model="imageUrl" type="url" placeholder="https://..." class="brutalist-input" />
+      <label class="field-label">Image URL</label>
+      <input v-model="imageUrl" type="url" placeholder="https://..." class="input" />
     </div>
 
     <!-- Actions -->
     <div class="flex gap-3 pt-2">
       <button type="button" @click="emit('cancel')"
-        class="flex-1 brutalist-btn">
+        class="flex-1 btn">
         Cancel
       </button>
       <button type="submit" :disabled="loading"
-        class="flex-1 brutalist-btn-red disabled:opacity-60">
+        class="flex-1 btn-primary">
         {{ loading ? 'Saving...' : 'Save recipe' }}
       </button>
     </div>
@@ -204,6 +204,5 @@ function handleSubmit() {
 </template>
 
 <style scoped>
-.label { @apply block text-xs font-display uppercase tracking-[0.08em] mb-1; }
-.ing-input { @apply border-2 border-ink bg-[color:var(--paper)] px-2 py-1 text-sm focus:outline-none; }
+.ing-input { @apply rounded-lg border border-line bg-surface px-2.5 py-1.5 text-sm focus:outline-none focus:border-accent focus:ring-4 focus:ring-accent/15; }
 </style>

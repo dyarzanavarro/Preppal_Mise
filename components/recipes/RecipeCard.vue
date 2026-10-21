@@ -18,39 +18,31 @@ const hostname = computed(() => {
 </script>
 
 <template>
-  <article class="brutalist-card overflow-hidden flex flex-col">
-    <div v-if="recipe.imageUrl" class="h-44 border-b-2 border-ink bg-black/5 overflow-hidden">
-      <img :src="recipe.imageUrl" :alt="recipe.name" class="w-full h-full object-cover" />
-    </div>
-    <div v-else class="h-32 border-b-2 border-ink bg-brand-500 text-ink grid place-items-center">
-      <span class="font-display text-5xl">R</span>
+  <article class="card flex flex-col overflow-hidden transition hover:shadow-md">
+    <div v-if="recipe.imageUrl" class="h-44 overflow-hidden bg-ink/5">
+      <img :src="recipe.imageUrl" :alt="recipe.name" class="h-full w-full object-cover" />
     </div>
 
-    <div class="p-4 flex-1 flex flex-col gap-3">
-      <div class="flex items-start justify-between gap-2">
-        <h3 class="font-display text-4xl leading-none">{{ recipe.name }}</h3>
-        <div class="flex gap-1 shrink-0">
-          <button @click="emit('edit', recipe)" class="brutalist-btn text-xs px-2 py-1">Edit</button>
-          <button @click="emit('delete', recipe.id)" class="brutalist-btn-red text-xs px-2 py-1">Delete</button>
+    <div class="flex flex-1 flex-col gap-3 p-5">
+      <div>
+        <h3 class="text-lg font-semibold leading-snug tracking-tight">{{ recipe.name }}</h3>
+        <p v-if="recipe.prepTime || recipe.cookTime || recipe.servings" class="mt-1 text-sm text-ink-2">
+          {{ [recipe.prepTime && `${recipe.prepTime} prep`, recipe.cookTime && `${recipe.cookTime} cook`, recipe.servings && `serves ${recipe.servings}`].filter(Boolean).join(' · ') }}
+        </p>
+      </div>
+
+      <div v-if="recipe.tags.length" class="flex flex-wrap gap-1.5">
+        <span v-for="tag in recipe.tags" :key="tag" class="chip">{{ tag }}</span>
+      </div>
+
+      <div class="mt-auto flex items-center justify-between pt-1">
+        <a v-if="recipe.sourceUrl" :href="recipe.sourceUrl" target="_blank" rel="noopener" class="link truncate text-xs">{{ hostname }}</a>
+        <span v-else />
+        <div class="flex gap-1.5">
+          <button @click="emit('edit', recipe)" class="btn btn-sm">Edit</button>
+          <button @click="emit('delete', recipe.id)" class="btn btn-sm text-danger">Delete</button>
         </div>
       </div>
-
-      <div class="flex flex-wrap gap-2 text-[11px] uppercase tracking-[0.08em]">
-        <span v-if="recipe.prepTime" class="border border-ink px-1.5 py-0.5">Prep {{ recipe.prepTime }}</span>
-        <span v-if="recipe.cookTime" class="border border-ink px-1.5 py-0.5">Cook {{ recipe.cookTime }}</span>
-        <span v-if="recipe.servings" class="border border-ink px-1.5 py-0.5">Serves {{ recipe.servings }}</span>
-      </div>
-
-      <div v-if="recipe.tags.length" class="flex flex-wrap gap-1.5 mt-auto">
-        <span v-for="tag in recipe.tags" :key="tag" class="border border-ink bg-white px-2 py-0.5 text-[11px] uppercase tracking-[0.08em]">
-          {{ tag }}
-        </span>
-      </div>
-
-      <a v-if="recipe.sourceUrl" :href="recipe.sourceUrl" target="_blank" class="text-xs uppercase tracking-[0.08em] underline">
-        {{ hostname }}
-      </a>
     </div>
   </article>
 </template>
-

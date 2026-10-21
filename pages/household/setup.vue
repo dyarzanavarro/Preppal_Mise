@@ -43,41 +43,41 @@ async function handleJoin() {
 
 <template>
   <div class="min-h-screen grid place-items-center px-4">
-    <div class="w-full max-w-xl brutalist-card bg-[color:var(--paper)] p-6 md:p-8 space-y-6">
-      <div>
-        <p class="editorial-kicker mb-3">Household Setup</p>
-        <h1 class="poster-title">Home Base</h1>
+    <div class="w-full max-w-md card p-6 md:p-8 space-y-6">
+      <div class="text-center">
+        <p class="text-sm font-semibold text-ink-2">Mise</p>
+        <h1 class="title-page mt-1">Set up your household</h1>
       </div>
 
       <template v-if="mode === 'choose'">
-        <p class="text-sm uppercase tracking-[0.08em]">Create a new household or join with an invite code.</p>
+        <p class="text-center text-sm text-ink-2">Create a new household or join with an invite code.</p>
         <div class="flex flex-wrap gap-2">
-          <button @click="mode = 'create'" class="brutalist-btn-red">Create household</button>
-          <button @click="mode = 'join'" class="brutalist-btn">Join household</button>
+          <button @click="mode = 'create'" class="btn-primary">Create household</button>
+          <button @click="mode = 'join'" class="btn">Join household</button>
         </div>
       </template>
 
       <template v-else-if="mode === 'create'">
-        <div class="flex gap-2">
-          <button @click="mode = 'choose'" class="brutalist-btn text-xs px-2 py-1">Back</button>
-          <h2 class="font-display text-4xl">Create</h2>
+        <div class="flex items-center gap-3">
+          <button @click="mode = 'choose'" class="btn btn-sm">Back</button>
+          <h2 class="title-section">Create</h2>
         </div>
-        <p v-if="error" class="border-2 border-ink bg-brand-500 text-ink px-3 py-2 text-sm">{{ error }}</p>
+        <p v-if="error" class="rounded-xl bg-danger/10 text-danger px-3.5 py-2.5 text-sm">{{ error }}</p>
         <form class="space-y-4" @submit.prevent="handleCreate">
-          <input v-model="householdName" type="text" required placeholder="Household name" class="brutalist-input" />
-          <button type="submit" :disabled="loading" class="w-full brutalist-btn-red disabled:opacity-60">
+          <input v-model="householdName" type="text" required placeholder="Household name" class="input" />
+          <button type="submit" :disabled="loading" class="w-full btn-primary !py-2.5">
             {{ loading ? 'Creating...' : 'Create household' }}
           </button>
         </form>
       </template>
 
       <template v-else>
-        <div class="flex gap-2">
-          <button @click="mode = 'choose'" class="brutalist-btn text-xs px-2 py-1">Back</button>
-          <h2 class="font-display text-4xl">Join</h2>
+        <div class="flex items-center gap-3">
+          <button @click="mode = 'choose'" class="btn btn-sm">Back</button>
+          <h2 class="title-section">Join</h2>
         </div>
-        <p class="text-sm uppercase tracking-[0.08em]">Enter the 6-character invite code.</p>
-        <p v-if="error" class="border-2 border-ink bg-brand-500 text-ink px-3 py-2 text-sm">{{ error }}</p>
+        <p class="text-sm text-ink-2">Enter the 6-character invite code.</p>
+        <p v-if="error" class="rounded-xl bg-danger/10 text-danger px-3.5 py-2.5 text-sm">{{ error }}</p>
         <form class="space-y-4" @submit.prevent="handleJoin">
           <input
             v-model="inviteCode"
@@ -85,8 +85,8 @@ async function handleJoin() {
             required
             placeholder="ABC123"
             maxlength="6"
-            class="brutalist-input text-center tracking-[0.3em] uppercase font-mono" />
-          <button type="submit" :disabled="loading" class="w-full brutalist-btn-red disabled:opacity-60">
+            class="input text-center font-mono" />
+          <button type="submit" :disabled="loading" class="w-full btn-primary !py-2.5">
             {{ loading ? 'Joining...' : 'Join household' }}
           </button>
         </form>

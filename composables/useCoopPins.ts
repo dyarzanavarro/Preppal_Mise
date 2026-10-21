@@ -8,9 +8,11 @@ export function useCoopPins() {
 
   async function load(): Promise<Record<string, Pin>> {
     if (!auth.householdId) return {}
-    const snap = await getDocs(collection(db, 'households', auth.householdId, 'skuPrefs'))
+    // Pins are a convenience: never let a slow or offline Firestore block the Coop flow.
+    const timeout = new Promise<null>((resolve) => setTimeout(() => resolve(null), 4000))
+    const snap = await Promise.race([getDocs(collection(db, 'households', auth.householdId, 'skuPrefs')), timeout])
     const pins: Record<string, Pin> = {}
-    snap.forEach((d) => { pins[decodeURIComponent(d.id)] = d.data() as Pin })
+    snap?.forEach((d) => { pins[decodeURIComponent(d.id)] = d.data() as Pin })
     return pins
   }
 

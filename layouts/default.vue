@@ -36,45 +36,40 @@ function isActive(path: string) {
 
 <template>
   <div class="min-h-screen pb-24 md:pb-0">
-    <header class="sticky top-0 z-40 border-b-2 border-ink bg-cream">
-      <div class="mx-auto max-w-7xl px-4 md:px-8 py-3 grid-12 items-end">
-        <NuxtLink to="/planner" class="col-span-6 md:col-span-4">
-          <p class="poster-subtitle text-xs md:text-sm">Meal Planning System</p>
-          <p class="font-display text-4xl md:text-6xl leading-none">MISE</p>
-        </NuxtLink>
+    <header class="sticky top-0 z-40 glass border-b border-line">
+      <div class="mx-auto max-w-6xl px-4 md:px-8 h-14 flex items-center justify-between gap-4">
+        <NuxtLink to="/planner" class="text-lg font-semibold tracking-tight">Mise</NuxtLink>
 
-        <nav class="hidden md:flex col-span-5 items-center justify-center gap-2">
+        <nav class="hidden md:flex items-center gap-1 rounded-full bg-ink/[0.06] p-1">
           <NuxtLink
             v-for="item in NAV_ITEMS"
             :key="item.to"
             :to="item.to"
-            class="brutalist-btn text-sm"
-            :class="isActive(item.to)
-              ? '-translate-x-[2px] -translate-y-[2px] shadow-[4px_4px_0_#111111] bg-brand-500 text-ink'
-              : 'text-ink'">
+            class="rounded-full px-4 py-1.5 text-sm font-medium transition"
+            :class="isActive(item.to) ? 'bg-surface text-ink shadow-sm' : 'text-ink-2 hover:text-ink'">
             {{ item.label }}
           </NuxtLink>
         </nav>
 
-        <div class="col-span-6 md:col-span-3 justify-self-end flex items-center gap-2">
-          <span class="hidden md:inline text-xs uppercase tracking-[0.08em]">{{ authStore.displayName }}</span>
-          <button @click="logout" class="brutalist-btn text-sm">Sign out</button>
+        <div class="flex items-center gap-3">
+          <span class="hidden md:inline text-sm text-ink-2">{{ authStore.displayName }}</span>
+          <button @click="logout" class="btn btn-sm">Sign out</button>
         </div>
       </div>
     </header>
 
-    <main class="mx-auto max-w-7xl px-4 md:px-8 py-6">
+    <main class="mx-auto max-w-6xl px-4 md:px-8 py-8">
       <slot />
     </main>
 
-    <nav class="md:hidden fixed bottom-0 inset-x-0 border-t-2 border-ink bg-cream z-40 flex items-stretch"
+    <nav class="md:hidden fixed bottom-0 inset-x-0 z-40 glass border-t border-line flex items-stretch"
       style="padding-bottom: env(safe-area-inset-bottom)">
       <NuxtLink
         v-for="item in NAV_ITEMS"
         :key="item.to"
         :to="item.to"
-        class="flex-1 text-center py-3 font-display uppercase border-r-2 border-ink last:border-r-0 text-ink"
-        :class="isActive(item.to) ? 'bg-brand-500 text-ink shadow-[inset_0_-4px_0_#111111]' : ''">
+        class="flex-1 text-center py-3 text-[11px] font-medium transition"
+        :class="isActive(item.to) ? 'text-accent' : 'text-ink-2'">
         {{ item.label }}
       </NuxtLink>
     </nav>

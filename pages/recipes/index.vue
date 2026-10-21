@@ -103,60 +103,54 @@ async function handleDelete(id: string) {
 
 <template>
   <div class="space-y-6">
-    <section class="grid-12 gap-y-4">
-      <div class="col-span-12 lg:col-span-7">
-        <p class="editorial-kicker mb-2">Editorial Archive</p>
-        <h1 class="poster-title">Recipes</h1>
-      </div>
-      <div class="col-span-12 lg:col-span-5 flex flex-wrap lg:justify-end items-end gap-2">
-        <button @click="openImport" class="brutalist-btn">Import URL</button>
-        <button @click="openAdd" class="brutalist-btn-red">Add Recipe</button>
+    <section class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+      <h1 class="title-page">Recipes</h1>
+      <div class="flex items-center gap-2">
+        <button @click="openImport" class="btn">Import URL</button>
+        <button @click="openAdd" class="btn-primary">Add recipe</button>
       </div>
     </section>
 
-    <section class="grid-12">
-      <div class="col-span-12 md:col-span-6">
-        <input
-          v-model="search"
-          type="search"
-          placeholder="Search recipes, tags, ingredients"
-          class="brutalist-input" />
-      </div>
-      <div class="col-span-12 md:col-span-6 flex flex-wrap md:justify-end gap-2">
+    <section class="space-y-3">
+      <input
+        v-model="search"
+        type="search"
+        placeholder="Search recipes, tags, ingredients"
+        class="input" />
+      <div class="flex flex-wrap gap-2">
         <button
           v-for="cat in CATEGORIES"
           :key="cat.key"
-          class="brutalist-btn text-sm"
-          :class="activeCategory === cat.key ? 'bg-brand-500 text-ink' : ''"
+          class="btn btn-sm"
+          :class="activeCategory === cat.key ? '!bg-accent !text-white' : ''"
           @click="activeCategory = activeCategory === cat.key ? null : cat.key">
           {{ cat.label }}
         </button>
       </div>
+      <div v-if="recipesStore.allTags.length" class="flex flex-wrap gap-2">
+        <button
+          class="btn btn-sm"
+          :class="activeTag === null ? '!bg-accent !text-white' : ''"
+          @click="activeTag = null">
+          All
+        </button>
+        <button
+          v-for="tag in recipesStore.allTags"
+          :key="tag"
+          class="btn btn-sm"
+          :class="activeTag === tag ? '!bg-accent !text-white' : ''"
+          @click="activeTag = activeTag === tag ? null : tag">
+          {{ tag }}
+        </button>
+      </div>
     </section>
 
-    <section v-if="recipesStore.allTags.length" class="flex flex-wrap gap-2">
-      <button
-        class="brutalist-btn text-sm"
-        :class="activeTag === null ? 'bg-brand-500 text-ink' : ''"
-        @click="activeTag = null">
-        All
-      </button>
-      <button
-        v-for="tag in recipesStore.allTags"
-        :key="tag"
-        class="brutalist-btn text-sm"
-        :class="activeTag === tag ? 'bg-brand-500 text-ink' : ''"
-        @click="activeTag = activeTag === tag ? null : tag">
-        {{ tag }}
-      </button>
-    </section>
+    <div v-if="recipesStore.loading" class="card p-10 text-center text-ink-2">Loading recipes…</div>
 
-    <div v-if="recipesStore.loading" class="brutalist-card p-8 text-center font-display text-2xl">Loading recipes</div>
-
-    <div v-else-if="filtered.length === 0" class="brutalist-card p-10 text-center space-y-2">
-      <p class="font-display text-5xl">No Match</p>
-      <p class="text-sm uppercase tracking-[0.08em]">
-        {{ recipesStore.recipes.length === 0 ? 'No recipes yet' : 'Try different filters' }}
+    <div v-else-if="filtered.length === 0" class="card px-6 py-14 text-center space-y-1">
+      <p class="title-section">No matches</p>
+      <p class="text-ink-2">
+        {{ recipesStore.recipes.length === 0 ? 'Add your first recipe to get started.' : 'Try different filters.' }}
       </p>
     </div>
 
@@ -182,13 +176,13 @@ async function handleDelete(id: string) {
   <Teleport to="body">
     <div
       v-if="modalMode === 'add' || modalMode === 'edit'"
-      class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+      class="fixed inset-0 z-50 scrim flex items-end md:items-center justify-center md:p-4"
       @click.self="closeModal(); importPrefill = null">
 
-      <div class="w-full max-w-2xl brutalist-card bg-[color:var(--paper)] max-h-[90vh] flex flex-col">
-        <div class="flex items-center justify-between px-5 py-4 border-b-2 border-ink shrink-0">
-          <h2 class="font-display text-3xl">{{ modalMode === 'edit' ? 'Edit Recipe' : 'Add Recipe' }}</h2>
-          <button @click="closeModal(); importPrefill = null" class="brutalist-btn text-xs">Close</button>
+      <div class="sheet w-full max-w-2xl max-h-[92dvh] flex flex-col">
+        <div class="flex items-center justify-between px-5 py-4 border-b border-line shrink-0">
+          <h2 class="title-section">{{ modalMode === 'edit' ? 'Edit recipe' : 'Add recipe' }}</h2>
+          <button @click="closeModal(); importPrefill = null" class="btn-icon" aria-label="Close"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg></button>
         </div>
 
         <div class="overflow-y-auto p-5">
