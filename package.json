@@ -11,7 +11,8 @@
     "coop:chrome": "tsx coop/chrome.ts",
     "coop:mcp": "tsx coop/mcp.ts",
     "coop:test": "node --import tsx --test coop/*.test.ts",
-    "coop:typecheck": "tsc -p coop/tsconfig.json"
+    "coop:typecheck": "tsc -p coop/tsconfig.json",
+    "coop:push": "scp -r .coop-chrome root@46.225.125.40:/var/www/betterplan/"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.32.1",
