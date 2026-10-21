@@ -25,3 +25,7 @@ Thumbs.db
 # Playwright
 .playwright-coop-profile
 playwright-debug.png
+
+# Coop session / pins
+.coop-chrome
+coop-pins.json

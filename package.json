@@ -7,9 +7,14 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "coop:chrome": "tsx coop/chrome.ts",
+    "coop:mcp": "tsx coop/mcp.ts",
+    "coop:test": "node --import tsx --test coop/*.test.ts",
+    "coop:typecheck": "tsc -p coop/tsconfig.json"
   },
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.1",
     "@nuxtjs/tailwindcss": "^6.12.0",
     "@pinia/nuxt": "^0.5.1",
     "@vite-pwa/nuxt": "^0.10.5",
@@ -18,10 +23,12 @@
     "pinia": "^2.1.7",
     "playwright": "^1.44.0",
     "vue": "^3.4.29",
-    "vue-router": "^4.3.3"
+    "vue-router": "^4.3.3",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",
+    "tsx": "^4.23.15",
     "typescript": "^5.4.5"
   }
 }

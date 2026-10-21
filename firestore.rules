@@ -37,6 +37,11 @@ service cloud.firestore {
       allow read:   if isSignedIn() && resource.data.members.hasAny([request.auth.uid]);
       allow create: if isSignedIn();
       allow update: if isSignedIn() && resource.data.members.hasAny([request.auth.uid]);
+
+      // Remembered ingredient -> Coop product choices, shared by the household
+      match /skuPrefs/{key} {
+        allow read, write: if isMemberOf(householdId);
+      }
     }
 
     // ── Recipes ───────────────────────────────────────────────────────────

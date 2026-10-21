@@ -51,6 +51,7 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     // Server-only secrets (not exposed to client)
+    anthropicApiKey: process.env.ANTHROPIC_API_KEY || '',
     // Public keys exposed to the client
     public: {
       firebaseApiKey: process.env.NUXT_PUBLIC_FIREBASE_API_KEY || '',

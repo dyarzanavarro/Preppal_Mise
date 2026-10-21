@@ -1,0 +1,76 @@
+{
+ "productCategorySearchPage": {
+  "results": [
+   {
+    "code": "4891633",
+    "title": "Kichererbsen",
+    "brandName": "Coop",
+    "netCapacity": "245",
+    "contentUnit": "g",
+    "salesUnit": "PCE",
+    "purchasable": true,
+    "available": true,
+    "variableAmount": false,
+    "price": {
+     "value": 1.2
+    }
+   },
+   {
+    "code": "5823123",
+    "title": "Karma Bio Kichererbsen",
+    "brandName": "Karma",
+    "netCapacity": "120",
+    "contentUnit": "g",
+    "salesUnit": "PCE",
+    "purchasable": true,
+    "available": true,
+    "variableAmount": false,
+    "price": {
+     "value": 1.5
+    }
+   },
+   {
+    "code": "6781122",
+    "title": "Karma Bio Kichererbsen",
+    "brandName": "Karma",
+    "netCapacity": "240",
+    "contentUnit": "g",
+    "salesUnit": "PCE",
+    "purchasable": true,
+    "available": true,
+    "variableAmount": false,
+    "price": {
+     "value": 2.5
+    }
+   },
+   {
+    "code": "6553758",
+    "title": "Prix Garantie Kichererbsen",
+    "brandName": "Prix Garantie",
+    "netCapacity": "400",
+    "contentUnit": "g",
+    "salesUnit": "PCE",
+    "purchasable": true,
+    "available": true,
+    "variableAmount": false,
+    "price": {
+     "value": 1.7
+    }
+   },
+   {
+    "code": "3031904",
+    "title": "Naturaplan Bio Kichererbsen",
+    "brandName": "Naturaplan",
+    "netCapacity": "500",
+    "contentUnit": "g",
+    "salesUnit": "PCE",
+    "purchasable": true,
+    "available": true,
+    "variableAmount": false,
+    "price": {
+     "value": 2.8
+    }
+   }
+  ]
+ }
+}

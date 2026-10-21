@@ -102,7 +102,24 @@ Generate `public/icons/icon-192.png` and `public/icons/icon-512.png` from `publi
 └── nuxt.config.ts
 ```
 
-## Phase 3 (planned)
+## Coop at Home
 
-- Coop automation via Playwright — push shopping list directly to cart
+Mise can fill your Coop cart from the shopping list ("Send to Coop"). It never checks out: you review the cart and pay (TWINT) on coop.ch.
+
+1. `npm run coop:chrome` opens a dedicated Chrome (remote debugging on `127.0.0.1:9222`). Log in to coop.ch there once and leave it running.
+2. In the app: Shopping → Send to Coop → check German search terms → review products and packs → add.
+3. "📌 Always buy this" remembers a product per ingredient for the household (`households/{id}/skuPrefs`; deploy the updated `firestore.rules`).
+4. Optional `ANTHROPIC_API_KEY` in `.env` auto-translates ingredient names to German search terms (Coop's search is German).
+
+Same service as an MCP server for Claude Desktop / Claude Code (stdio): `npm run coop:mcp`.
+Tools: `coop_status`, `coop_search`, `coop_plan` (dry run), `coop_add_to_cart`, `coop_pin`, `coop_list_pins`.
+```json
+{ "mcpServers": { "coop": { "command": "npx", "args": ["tsx", "coop/mcp.ts"], "cwd": "/path/to/Preppal_Mise" } } }
+```
+The MCP server keeps its pins in `coop-pins.json`; the app keeps them in Firestore.
+
+`npm run coop:test` runs the matcher tests, `npm run coop:typecheck` typechecks `coop/`.
+
+## Planned
+
 - Meal suggestions filtered by tags / available ingredients
