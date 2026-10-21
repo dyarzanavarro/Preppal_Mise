@@ -2,6 +2,10 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
 
+  tailwindcss: {
+    cssPath: '~/assets/css/main.css',
+  },
+
   modules: [
     '@nuxtjs/tailwindcss',
     '@pinia/nuxt',
@@ -62,8 +66,6 @@ export default defineNuxtConfig({
       firebaseAppId: process.env.NUXT_PUBLIC_FIREBASE_APP_ID || '',
     },
   },
-
-  css: ['~/assets/css/main.css'],
 
   typescript: {
     strict: true,
