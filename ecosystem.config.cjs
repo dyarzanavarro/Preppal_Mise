@@ -8,7 +8,7 @@ module.exports = {
     },
     {
       name: 'coop-xvfb',
-      script: 'Xvfb',
+      script: '/usr/bin/Xvfb',
       args: ':99 -screen 0 1280x720x24 -ac',
       interpreter: 'none',
       autorestart: true,
